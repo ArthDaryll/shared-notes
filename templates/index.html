@@ -1,15 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Shared Notes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharedNotes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Welcome to Shared Notes!</h1>
-    <p>This is your first web page using Flask templates.</p>
-    <form action="/" method="POST">
-    <input type="text" name="note_content" placeholder="Type your note here..." required>
-    <button type="submit">Save Note</button>
-    
-</form>
+    <h1>Shared Notes</h1>git add .
+
+    <form action="/add" method="POST">
+        <input type="text" name="note_content" placeholder="Write a note..." required>
+        <button type="submit">Add Note</button>
+    </form>
+
+    <hr>
+
+    <div class="notes-list">
+        <h2>Saved Notes:</h2>
+        <ul>
+            {% for note in notes %}
+                <li>
+                    {{ note.content }} 
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
