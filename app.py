@@ -1,51 +1,38 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-import os
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
-
-# 1. Database Configuration
-# This creates a file named 'sharednotes.db' in your project folder
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sharednotes.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+socketio = SocketIO(app, cors_allowed_origins="*") # Allows ngrok connections
 db = SQLAlchemy(app)
 
-# 2. The Database Table (The "Filing Cabinet")
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(500), nullable=False)
 
-# 3. Create the Database
-with app.app_context():
-    db.create_all()
-
 @app.route("/")
 def home():
-    # Fetch all saved notes to send to Person A's HTML
-    all_notes = Note.query.all()
-    return render_template("index.html", notes=all_notes)
+    notes = Note.query.all()
+    return render_template("index.html", notes=notes)
 
-@app.route("/add", methods=["POST"])
-def add_note():
-    # 'note_content' is the ID Person A must use in their HTML
-    user_text = request.form.get("note_content")
-    if user_text:
-        new_note = Note(content=user_text)
-        db.session.add(new_note)
-        db.session.commit()
-    return redirect("/")
+# This handles "Add" in real-time
+@socketio.on('add_note')
+def handle_add_note(data):
+    new_note = Note(content=data['content'])
+    db.session.add(new_note)
+    db.session.commit()
+    # Broadcast to EVERYONE connected
+    emit('note_added', {'id': new_note.id, 'content': new_note.content}, broadcast=True)
 
-@app.route("/delete/<int:note_id>", methods=["POST"]) # <--- ADD THIS HERE
-def delete_note(note_id):
-    note_to_delete = Note.query.get_or_404(note_id)
-    
-    try:
-        db.session.delete(note_to_delete)
+# This handles "Delete" in real-time
+@socketio.on('delete_note')
+def handle_delete_note(data):
+    note = Note.query.get(data['id'])
+    if note:
+        db.session.delete(note)
         db.session.commit()
-        return redirect("/")
-    except:
-        return "Error: Could not delete note."
-    
+        emit('note_deleted', {'id': data['id']}, broadcast=True)
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)

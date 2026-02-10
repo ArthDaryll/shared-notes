@@ -31,5 +31,33 @@
             {% endfor %}
         </ul>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+    <script>
+    var socket = io();
+
+    // Sending data to server
+    function addNote() {
+        const content = document.getElementById('note-content').value;
+        socket.emit('add_note', {content: content});
+        document.getElementById('note-content').value = '';
+    }
+
+    function deleteNote(id) {
+        socket.emit('delete_note', {id: id});
+    }
+
+    // Receiving updates from server (The "Sync" Part)
+    socket.on('note_added', function(data) {
+        const ul = document.getElementById('notes-container');
+        ul.innerHTML += `<li id="note-${data.id}">${data.content} 
+            <button onclick="deleteNote(${data.id})">Delete</button></li>`;
+    });
+
+    socket.on('note_deleted', function(data) {
+        document.getElementById(`note-${data.id}`).remove();
+    });
+</script>
 </body>
 </html>
