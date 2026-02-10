@@ -36,9 +36,6 @@ def add_note():
         db.session.commit()
     return redirect("/")
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
 @app.route("/delete/<int:note_id>")
 def delete_note(note_id):
     # 1. Look into the 'Note' table for a specific row matching the ID
@@ -53,3 +50,6 @@ def delete_note(note_id):
         return redirect("/")
     except:
         return "Error: Could not delete note."
+    
+if __name__ == "__main__":
+    app.run(debug=True)
