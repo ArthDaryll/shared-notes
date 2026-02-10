@@ -26,5 +26,15 @@
             {% endfor %}
         </ul>
     </div>
+    <ul>
+    {% for note in notes %}
+        <li style="margin-bottom: 10px;">
+            {{ note.content }}
+            <form action="/delete/{{ note.id }}" method="POST" style="display:inline;">
+                <button type="submit" style="color: red; margin-left: 10px;">Delete</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
 </body>
 </html>
