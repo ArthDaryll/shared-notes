@@ -9,8 +9,8 @@
 <body>
     <h1>Shared Notes</h1>
 
-    <form action="/add" method="POST">
-        <input type="text" name="note_content" placeholder="Write a note..." required>
+    <form onsubmit="event.preventDefault(); addNote();">
+        <input type="text" id="note-content" placeholder="Write a note..." required>
         <button type="submit">Add Note</button>
     </form>
 
@@ -18,15 +18,13 @@
 
     <div class="notes-list">
         <h2>Saved Notes:</h2>
-        <ul>
+        <ul id="notes-container">
             {% for note in notes %}
-                <li style="margin-bottom: 10px;">
+                <li id="note-{{ note.id }}" style="margin-bottom: 10px;">
                     {{ note.content }}
-                    <form action="/delete/{{ note.id }}" method="POST" style="display:inline;">
-                        <button type="submit" style="color: red; margin-left: 10px; cursor: pointer;">
-                            Delete
-                        </button>
-                    </form>
+                    <button onclick="deleteNote({{ note.id }})" style="color: red; margin-left: 10px; cursor: pointer;">
+                        Delete
+                    </button>
                 </li>
             {% endfor %}
         </ul>
@@ -37,26 +35,37 @@
     <script>
     var socket = io();
 
-    // Sending data to server
     function addNote() {
-        const content = document.getElementById('note-content').value;
-        socket.emit('add_note', {content: content});
-        document.getElementById('note-content').value = '';
+        const input = document.getElementById('note-content');
+        const content = input.value;
+        if (content) {
+            socket.emit('add_note', {content: content});
+            input.value = ''; // Clears the box after sending
+        }
     }
 
     function deleteNote(id) {
         socket.emit('delete_note', {id: id});
     }
 
-    // Receiving updates from server (The "Sync" Part)
+    // Receiving updates (Real-time sync)
     socket.on('note_added', function(data) {
         const ul = document.getElementById('notes-container');
-        ul.innerHTML += `<li id="note-${data.id}">${data.content} 
-            <button onclick="deleteNote(${data.id})">Delete</button></li>`;
+        // We add the new item with the same style and delete button
+        ul.innerHTML += `
+            <li id="note-${data.id}" style="margin-bottom: 10px;">
+                ${data.content} 
+                <button onclick="deleteNote(${data.id})" style="color: red; margin-left: 10px; cursor: pointer;">
+                    Delete
+                </button>
+            </li>`;
     });
 
     socket.on('note_deleted', function(data) {
-        document.getElementById(`note-${data.id}`).remove();
+        const element = document.getElementById(`note-${data.id}`);
+        if (element) {
+            element.remove();
+        }
     });
 </script>
 </body>
