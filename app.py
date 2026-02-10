@@ -38,3 +38,18 @@ def add_note():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route("/delete/<int:note_id>")
+def delete_note(note_id):
+    # 1. Look into the 'Note' table for a specific row matching the ID
+    note_to_delete = Note.query.get_or_404(note_id)
+    
+    try:
+        # 2. Mark that specific row for removal
+        db.session.delete(note_to_delete)
+        # 3. Save the changes to the .db file
+        db.session.commit()
+        # 4. Go back to the main list
+        return redirect("/")
+    except:
+        return "Error: Could not delete note."
