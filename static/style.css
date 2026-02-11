@@ -1,18 +1,40 @@
-.top-bar {
-    /* Basics from your Figma code */
-    background: #1A1A1A;
-    border-bottom: 2px solid #FFC700; /* Bottom border looks cleaner for a header */
+//Dashboard
+.topbar{
+   /* Rectangle 7 */
+    /* Rectangle 7 */
+    box-sizing: border-box;
+    position: relative;
     height: 100px;
-    
-    /* Responsive settings (Better than absolute positioning) */
-    width: 100%;
-    display: flex;
-    align-items: center; /* Centers text vertically */
-    padding: 0 20px;     /* Gives the text some breathing room from the edge */
-    box-sizing: border-box; 
+    left: 0px;
+    top: 0px;
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
 }
 
 .top-bar h1 {
-    color: #FFC700; /* Matches your border color */
     margin: 0;
+    /* Shared Notes */
+    position: absolute;
+    width: 267px;
+    height: 41px;
+    left: 403px;
+    top: 30px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 48px;
+    color: #FFC700;
+}
+.header-logo{
+    margin-left: 338px;
+    margin-top: 30px;
+}
+body{
+    background-color: #000000; 
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Ensures the black covers the whole screen */
+    color: white;
 }
