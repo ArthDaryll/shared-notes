@@ -38,3 +38,25 @@ body{
     left: 335px;
     top: 15px;
 }
+.New-note{
+    /* Rounded rectangle */
+    position: absolute;
+    width: 150px;
+    height: 41px;
+    left: 1435px;
+    top: 30px;
+    background: #FFC700;
+    border-radius: 15px;
+    /* New Note */
+    /* New Note */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+}
+.addButton{
+    /* Vector */
+    
+}
