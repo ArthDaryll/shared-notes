@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Shared Notes</h1>
+    <div class="top-bar">
+    <h1>SharedNotes</h1>
+    </div>
 
     <form onsubmit="event.preventDefault(); addNote();">
         <input type="text" id="note-content" placeholder="Write a note..." required>
@@ -68,5 +70,6 @@
         }
     });
 </script>
+
 </body>
 </html>
