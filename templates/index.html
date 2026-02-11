@@ -4,36 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SharedNotes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="top-bar">
-    <h1>SharedNotes</h1>
-    </div>
+<body class="bg-black text-white">
 
-    <form onsubmit="event.preventDefault(); addNote();">
-        <input type="text" id="note-content" placeholder="Write a note..." required>
-        <button type="submit">Add Note</button>
-    </form>
+    <nav class="nav-container">
+        <div class="logo-section">
+            <span class="text-2xl">📝</span>
+            <h1 class="nav-title">Shared Notes</h1>
+        </div>
+        <button onclick="toggleModal()" class="btn-new-note">+ New Note</button>
+    </nav>
 
-    <hr>
+    <main class="main-content">
+        <div id="empty-state" class="{% if notes %}hidden{% endif %} empty-container">
+            <div class="empty-icon">📄</div>
+            <h2 class="empty-title">No notes yet</h2>
+            <p class="empty-subtitle">Click "New Note" to create your first note</p>
+        </div>
 
-    <div class="notes-list">
-        <h2>Saved Notes:</h2>
-        <ul id="notes-container">
+        <ul id="notes-container" class="notes-grid">
             {% for note in notes %}
-                <li id="note-{{ note.id }}" style="margin-bottom: 10px;">
-                    {{ note.content }}
-                    <button onclick="deleteNote({{ note.id }})" style="color: red; margin-left: 10px; cursor: pointer;">
-                        Delete
-                    </button>
+                <li id="note-{{ note.id }}" class="note-card group">
+                    <p class="note-text">{{ note.content }}</p>
+                    <button onclick="deleteNote({{ note.id }})" class="delete-btn">Delete</button>
                 </li>
             {% endfor %}
         </ul>
+    </main>
+
+    <div id="note-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h2 class="text-xl font-bold mb-4">Create a new note</h2>
+            <textarea id="note-content" class="modal-textarea" placeholder="Write something..."></textarea>
+            <div class="modal-actions">
+                <button onclick="toggleModal()" class="btn-cancel">Cancel</button>
+                <button onclick="addNote(); toggleModal();" class="btn-save">Save Note</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    
 </body>
 </html>
