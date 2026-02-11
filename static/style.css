@@ -1,62 +1,67 @@
-body{
+body {
     background-color: #000000; 
     margin: 0;
     padding: 0;
-    min-height: 100vh; /* Ensures the black covers the whole screen */
+    min-height: 100vh;
     color: white;
 }
-.top-bar{
-    /* Rectangle 7 */
+
+.top-bar {
     box-sizing: border-box;
-    position: relative;
-    width: 1912px;
+    width: 100%; /* Spans full width of any screen */
     height: 100px;
-    left: 0px;
-    top: 0px;
     background: #1A1A1A;
-    border: 3px solid #FFC700;
+    border-bottom: 3px solid #FFC700; /* Border only at the bottom looks cleaner */
+    
+    /* FLEXBOX - This makes it flexible */
+    display: flex;
+    align-items: center; /* Centers items vertically */
+    justify-content: space-between; /* Pushes content to the edges */
+    padding: 0 50px; /* Adds breathing room on left and right */
 }
-.top-bar h1{
-    /* Shared Notes */
-    position: absolute;
-    width: 267px;
-    height: 41px;
-    left: 403px;
-    top: 30px;
-    font-family: 'Inter';
-    font-style: normal;
+
+/* Container for Logo + Title */
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between logo and text */
+}
+
+.header-logo {
+    width: 50px; /* Reduced slightly for better scaling */
+    height: auto;
+}
+
+.top-bar h1 {
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
-    font-size: 40px;
-    line-height: 48px;
+    font-size: 32px; /* Slightly smaller for better fit */
     color: #FFC700;
+    margin: 0;
 }
-.header-logo{
-    /* Edit Text File */
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    left: 335px;
-    top: 15px;
-}
-.New-note{
-    /* Rounded rectangle */
-    position: absolute;
-    width: 150px;
-    height: 41px;
-    left: 1435px;
-    top: 30px;
+
+.New-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 160px;
+    height: 45px;
     background: #FFC700;
     border-radius: 15px;
-    /* New Note */
-    /* New Note */
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 24px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
     color: #000000;
+    cursor: pointer;
+    transition: transform 0.2s;
 }
-.addButton{
-    /* Vector */
-    
+
+.New-note:hover {
+    transform: scale(1.05); /* Small pop effect */
+}
+
+.addButton {
+    width: 18px;
 }
