@@ -1,17 +1,1 @@
-.top-bar {
-    /* Basics from your Figma code */
-    background: #1A1A1A;
-    border-bottom: 2px solid #FFC700; /* Bottom border looks cleaner for a header */
-    height: 100px;
-    
-    /* Responsive settings (Better than absolute positioning) */
-    width: 100%;
-    display: flex;
-    align-items: center; /* Centers text vertically */
-    padding: 0 20px;     /* Gives the text some breathing room from the edge */
-    box-sizing: border-box; 
-}
-.top-bar h1 {
-    color: #FFC700; /* Matches your border color */
-    margin: 0;
-}
+/*tailewind*/
