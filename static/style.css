@@ -128,8 +128,8 @@ p#cnn{
     background: transparent;
     border: none;
     border-bottom: 1px solid #FFC700;
-    color: white;
-    font-size: 24px;
+    color: #FFC700;
+    font-size: 18px;
     width: 100%;
     outline: none;
     padding: 10px 0;
@@ -143,19 +143,27 @@ p#cnn{
 }
 #content{
     background: transparent;
-    /* Rectangle 11 */
+    padding: 15px;
     border: 1px solid #FFC700;
+    border-radius: 20px;
     position: relative;
-    width: 1200px;
+    width: 100%;
     height: 190px;
     left: 50%;
     transform: translateX(-50%);
     top: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #FFC700;
 }
 #content::placeholder{
     color: #FFC700;
     opacity: 0.5;
     font-family: 'Inter', sans-serif;
+}
+
+#content:focus {
+    box-shadow: 0 0 5px #FFC700;
+    outline: none;
 }
 .insideCreate{
     margin: 25px;
