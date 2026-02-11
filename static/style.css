@@ -87,6 +87,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
+    
 }
 
 /* Remove the huge gaps around your text */
@@ -112,4 +113,50 @@ body {
 
 .body-logo {
     margin-bottom: 5px; /* Keeps icon close to text */
+    opacity: 0.5;
+}
+p#cnn{
+    /* Create New Note */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 39px;
+    color: #FFC700;
+}
+#fname {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #FFC700;
+    color: white;
+    font-size: 24px;
+    width: 100%;
+    outline: none;
+    padding: 10px 0;
+}
+
+/* Style the Placeholder specifically for this ID */
+#fname::placeholder {
+    color: #FFC700;
+    opacity: 0.5;
+    font-family: 'Inter', sans-serif;
+}
+#content{
+    background: transparent;
+    /* Rectangle 11 */
+    border: 1px solid #FFC700;
+    position: relative;
+    width: 1200px;
+    height: 190px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+}
+#content::placeholder{
+    color: #FFC700;
+    opacity: 0.5;
+    font-family: 'Inter', sans-serif;
+}
+.insideCreate{
+    margin: 25px;
 }

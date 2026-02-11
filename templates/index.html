@@ -24,12 +24,20 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
     <div class="createNote">
-
+        <div class="insideCreate">
+            <p id="cnn">Create New Note</p>
+            <form>
+                <input type="text" id="fname" placeholder="Note Title"><br>
+            </form>
+            <form>
+                <textarea id="content" placeholder="Write your note here"></textarea>
+            </form>
+        </div>
     </div>
 
     <div class="stack-wrapper">
         <div class="body-bar">
-            <img src="{{ url_for('static', filename='png/haha.png') }}">
+            <img src="{{ url_for('static', filename='png/haha.png') }}" class="body-logo">
             <h2>No notes yet</h2>
             <p id="create">Click "New Note" to create your first note</p>
         </div>
