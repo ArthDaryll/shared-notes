@@ -1,5 +1,19 @@
 var socket = io();
 
+document.querySelector('.New-note').addEventListener('click', function(e) {
+    // Prevent the form from submitting if you don't want the page to reload
+    e.preventDefault(); 
+
+    const createNoteDiv = document.querySelector('.createNote');
+    
+    // Change display from 'none' to 'block'
+    createNoteDiv.style.display = 'block';
+
+    const stackWrapper = document.querySelector('.stack-wrapper');
+    // Change 500px to something smaller, like 20px, or remove this line
+    stackWrapper.style.paddingTop = '0px';
+});
+
 function toggleModal() {
     const modal = document.getElementById('note-modal');
     modal.classList.toggle('hidden');

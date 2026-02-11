@@ -19,18 +19,20 @@
             <span id="Newnote">New Note</span>
         </button>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
-    <div class="stack-wrapper">
-    <div class="body-bar">
-        <img src="{{ url_for('static', filename='png/haha.png') }}" class="body-logo">
-        <h2>No notes yet</h2>
-        <p id="create">Click "New Note" to create your first note</p>
-    </div>
-    <div class="createNote" >
+    <div class="createNote">
 
     </div>
+
+    <div class="stack-wrapper">
+        <div class="body-bar">
+            <img src="{{ url_for('static', filename='png/haha.png') }}">
+            <h2>No notes yet</h2>
+            <p id="create">Click "New Note" to create your first note</p>
+        </div>
     </div>
 </body>
 </html>
