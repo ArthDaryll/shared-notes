@@ -140,6 +140,7 @@ p#cnn{
     color: #FFC700;
     opacity: 0.5;
     font-family: 'Inter', sans-serif;
+    resize: none;
 }
 #content{
     background: transparent;
@@ -154,6 +155,7 @@ p#cnn{
     top: 20px;
     font-family: 'Inter', sans-serif;
     color: #FFC700;
+    resize: none;
 }
 #content::placeholder{
     color: #FFC700;
@@ -202,11 +204,12 @@ p#cnn{
 }
 .btnCreate{
     display: flex;
-    position: absolute;
     padding-top: 30px;
-    width: 1200px;
+    width: 100%;
     gap: 20px;  
     justify-content: flex-end;
+    align-items: center;
+;
 }
 .notes{
     /* Rectangle 9 */
