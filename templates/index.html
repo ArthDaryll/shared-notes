@@ -32,6 +32,10 @@
             <form>
                 <textarea id="content" placeholder="Write your note here"></textarea>
             </form>
+            <div class="btnCreate">
+            <button class="cancelButton" type="button">Cancel</button>
+            <button class="saveButton" type="submit">Create Note</button>
+            </div>
         </div>
     </div>
 
@@ -41,6 +45,16 @@
             <h2>No notes yet</h2>
             <p id="create">Click "New Note" to create your first note</p>
         </div>
+    </div>
+    <div class="notes">
+        <h3>Title</h3>
+        <hr>
+        <div class="note-action">
+        <button class="rewrite"><img src="{{ url_for('static', filename='png/Ball Point Pen.png')}}"></button>
+        <button class="delete"><img src="{{ url_for('static', filename='png/delete.png') }}"></button>
+        </div>
+        <p class="Note-Content">Content of the notes</p>
+        <p class="Time">Updated: 12/06/2026, 12:01 PM</p>
     </div>
 </body>
 </html>

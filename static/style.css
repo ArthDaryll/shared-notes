@@ -75,7 +75,7 @@ body {
 }
 
 .stack-wrapper {
-    display: block;
+    display: none;
     width: 100%;
     text-align: center;
     margin-top: 10px; /* Controls exact gap from box to text */
@@ -167,4 +167,117 @@ p#cnn{
 }
 .insideCreate{
     margin: 25px;
+}
+.cancelButton{
+    position: relative;
+    width: 110px;
+    height: 45px;
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
+    border-radius: 10px;
+    /* Cancel */
+    font-family: 'Inter';
+    text-align: center;
+    font-style: normal;
+    font-size: 24px;
+    color: #FFC700;
+}
+.saveButton{
+    position: relative;
+    width: 150px;
+    height: 45px;
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
+    border-radius: 10px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #FFC700;
+    
+}
+.saveButton:hover, .cancelButton:hover{
+    background-color: #ffc700;
+    color: #000000;
+}
+.btnCreate{
+    display: flex;
+    position: absolute;
+    padding-top: 30px;
+    width: 1200px;
+    gap: 20px;  
+    justify-content: flex-end;
+}
+.notes{
+    /* Rectangle 9 */
+    position: relative;
+    width: 380px;
+    height: 350px;
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+    margin: 15px;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;
+}
+.notes h3{
+    padding: 1em;
+    text-align: left;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 0%;
+    color: #FFC700;
+}
+.notes hr{
+    border: 0;
+    border-top: 1px solid #FFC700;
+    width: 90%;
+    margin: 5px auto;
+}
+.note-action{
+    position: absolute;
+    display: flex;
+    top: 10px;
+    right: 15px;
+    gap: 15px;
+}
+.note-action button{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+.note-action img{
+    width: 40px;
+    height: 40px;
+}
+.note-action button:hover {
+    transform: scale(1.1); /* Subtle grow effect */
+}
+.Note-Content{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFC700;
+    padding-left: 15px;
+}
+.Time{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FFC700;
+    padding-left: 15px;
+    position: absolute;
+    bottom: 15px;
 }
