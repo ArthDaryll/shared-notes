@@ -75,10 +75,9 @@ body {
 }
 
 .stack-wrapper {
-    display: none;
     width: 100%;
     text-align: center;
-    margin-top: 10px; /* Controls exact gap from box to text */
+    margin-top: 40px; /* Controls exact gap from box to text */
 }
 
 .body-bar{
@@ -211,8 +210,20 @@ p#cnn{
     align-items: center;
 ;
 }
-.notes{
-    /* Rectangle 9 */
+
+.note-holder {
+    display: flex;
+    flex-direction: row;    /* Line them up horizontally */
+    flex-wrap: wrap;       /* Push to new line if screen is full */
+    justify-content: center; /* Center the whole group */
+    align-items: flex-start;
+    gap: 30px;
+    padding: 40px;
+    width: 100%;
+    margin: 0;
+}
+
+.notes {
     position: relative;
     width: 380px;
     height: 350px;
@@ -220,15 +231,8 @@ p#cnn{
     border: 1px solid #FFC700;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 30px;
-    margin: 15px;
-    
 }
-.note-holder{
-    display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;     /* Centers vertically */       /* Makes the body the full height of the screen */
-    margin: 0;
-}
+
 .notes h3{
     padding: 1em;
     text-align: left;
@@ -245,6 +249,18 @@ p#cnn{
     width: 90%;
     margin: 5px auto;
 }
+
+.single-note-container {
+    width: 100%;
+    max-width: 600px;       /* Keeps it centered and readable */
+    background-color: #1a1a1a; /* Match your theme */
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;     /* NOT absolute */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
 .note-action{
     position: absolute;
     display: flex;
@@ -269,16 +285,15 @@ p#cnn{
 .note-action button:hover {
     transform: scale(1.1); /* Subtle grow effect */
 }
-.Note-Content{
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 24px;
+.Note-Content {
+    padding: 1em 2em;
     color: #FFC700;
-    padding-left: 15px;
+    font-family: 'Inter';
+    word-wrap: break-word; /* Prevents long text from going outside the box */
 }
-.Time{
+.Time {
+    display: block;
+    padding: 0 2rem;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -289,3 +304,51 @@ p#cnn{
     position: absolute;
     bottom: 15px;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #1A1A1A;
+    border: 2px solid #FFC700;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-content h3 { 
+    color: #FFC700; 
+    margin-bottom: 10px; 
+}
+.modal-content p { 
+    color: #ccc; 
+    margin-bottom: 25px; 
+}
+
+.modal-buttons { 
+    display: flex; 
+    justify-content: space-around; 
+}
+
+.modal-btn-cancel { 
+    background: #333; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 10px; 
+    cursor: pointer; 
+}
+
+.modal-btn-confirm { 
+    background: #d93025; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 10px; 
+    cursor: pointer; }

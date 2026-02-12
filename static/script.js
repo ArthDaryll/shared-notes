@@ -1,62 +1,111 @@
 var socket = io();
 
-document.querySelector('.New-note').addEventListener('click', function(e) {
-    // Prevent the form from submitting if you don't want the page to reload
-    e.preventDefault(); 
+let noteIdToDelete = null; // Temporary storage for the ID
 
-    const createNoteDiv = document.querySelector('.createNote');
-    
-    // Change display from 'none' to 'block'
-    createNoteDiv.style.display = 'block';
+// 1. Open Modal instead of browser alert
+function deleteNote(noteId) {
+    noteIdToDelete = noteId;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
 
-    const stackWrapper = document.querySelector('.stack-wrapper');
-    // Change 500px to something smaller, like 20px, or remove this line
-    stackWrapper.style.paddingTop = '0px';
+document.addEventListener('DOMContentLoaded', () => {
+    const deleteModal = document.getElementById('deleteModal');
+    const confirmBtn = document.getElementById('confirmDelete');
+    const cancelBtn = document.getElementById('cancelDelete');
+
+    // 2. Handle Cancel
+    cancelBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+        noteIdToDelete = null;
+    });
+
+    // 3. Handle Confirm
+    confirmBtn.addEventListener('click', () => {
+        if (noteIdToDelete) {
+            socket.emit('delete_note', { id: noteIdToDelete });
+            deleteModal.style.display = 'none';
+            noteIdToDelete = null;
+        }
+    });
 });
 
-function toggleModal() {
-    const modal = document.getElementById('note-modal');
-    modal.classList.toggle('hidden');
-    if (!modal.classList.contains('hidden')) {
-        document.getElementById('note-content').focus();
-    }
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const newNoteBtn = document.querySelector('.New-note');
+    const createNoteContainer = document.querySelector('.createNote');
+    const cancelBtn = document.querySelector('.cancelButton');
+    const noteForm = document.querySelector('#noteForm');
 
-function addNote() {
-    const input = document.getElementById('note-content');
-    if (input.value.trim()) {
-        socket.emit('add_note', {content: input.value});
-        input.value = '';
-    }
-}
+    newNoteBtn.addEventListener('click', () => {
+        createNoteContainer.style.display = (createNoteContainer.style.display === 'block') ? 'none' : 'block';
+    });
 
-function deleteNote(id) {
-    socket.emit('delete_note', {id: id});
-}
+    cancelBtn.addEventListener('click', () => {
+        createNoteContainer.style.display = 'none';
+    });
+    noteForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const titleValue = document.querySelector('#fname').value;
+        const contentValue = document.querySelector('#content').value;
+
+        socket.emit('add_note', {
+            title: titleValue, 
+            content: contentValue
+        });
+        
+        this.reset();
+        createNoteContainer.style.display = 'none';
+    });
+});
 
 socket.on('note_added', function(data) {
-    const emptyState = document.getElementById('empty-state');
-    if (emptyState) emptyState.classList.add('hidden');
-    
-    const ul = document.getElementById('notes-container');
+    let container = document.querySelector('.note-holder');
+    const emptyState = document.querySelector('.stack-wrapper');
+
+    // If "No notes yet" is visible, we must create the note-holder first
+    if (emptyState) {
+        // Replace the entire empty state area with a fresh note-holder
+        emptyState.outerHTML = `<div class="note-holder"></div>`;
+        container = document.querySelector('.note-holder');
+    }
+
     const newNoteHtml = `
-        <li id="note-${data.id}" class="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl flex flex-col justify-between min-h-[160px] group hover:border-yellow-500/40 transition-all hover:shadow-2xl hover:shadow-yellow-500/5">
-            <p class="text-zinc-200 leading-relaxed">${data.content}</p>
-            <div class="flex justify-end mt-4">
-                <button onclick="deleteNote(${data.id})" class="text-zinc-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all text-xs font-bold uppercase tracking-widest">
-                    Delete
-                </button>
+        <div id="note-${data.id}" class="notes">
+            <div class="note-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 25px;">
+                <h3>${data.title}</h3>
+                <div class="note-action">
+                    <button class="rewrite"><img src="/static/png/Ball Point Pen.png"></button>
+                    <button class="delete" onclick="deleteNote(${data.id})"><img src="/static/png/delete.png"></button>
+                </div>
             </div>
-        </li>`;
-    ul.insertAdjacentHTML('afterbegin', newNoteHtml);
+            <hr>
+            <p class="Note-Content">${data.content}</p>
+            <span class="Time" style="margin-top: auto; padding: 20px;">Updated: ${data.timestamp}</span>
+        </div>`;
+    
+    // Insert the note into the now-existing container
+    if (container) {
+        container.insertAdjacentHTML('afterbegin', newNoteHtml);
+    } else {
+        // Fallback: if structure is missing, refresh to let Jinja rebuild it
+        location.reload();
+    }
 });
 
 socket.on('note_deleted', function(data) {
     const el = document.getElementById(`note-${data.id}`);
     if (el) el.remove();
     
-    const container = document.getElementById('notes-container');
-    if (container.children.length === 0) {
-        document.getElementById('empty-state').classList.remove('hidden');
+    const container = document.querySelector('.note-holder');
+    if (container && container.children.length === 0) {
+        location.reload();
+
+        container.innerHTML = `
+            <div class="stack-wrapper">
+                <div class="body-bar">
+                    <img src="/static/png/haha.png" class="body-logo">
+                    <h2>No notes yet</h2>
+                    <p id="create">Click "New Note" to create your first note</p>
+                </div>
+            </div>`;
     }
 });
