@@ -4,6 +4,94 @@
     <meta charset="UTF-8">
     <title>Login - SharedNotes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <style>
+    .auth-body {
+        background-color: #000000; 
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .auth-card {
+        background: #1A1A1A;
+        border: 1px solid #FFC700;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+    }
+    .auth-card h1 {
+        color: #FFC700;
+        margin-bottom: 20px;
+        font-size: 48px;
+        font-weight: bold;
+    }
+    .auth-card form {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .auth-form input{
+        background: transparent;
+        border: 1px solid #FFC700;
+        border-radius: 5px;
+        padding: 12px 15px;
+        transition: box-shadow 0.3s ease;
+    }
+    .auth-form input:focus{
+        outline: none;
+        box-shadow: 0 0 0 2px #FFC700;
+    }
+    .auth-form input::placeholder{
+        color: #FFC700;
+        opacity: .5;
+    }
+    .auth-form button{
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+    .btn-primary {
+        background: #1A1A1A;
+        color: #FFC700;
+        border: #FFC700 solid 1px;
+        border-radius: 5px;
+        padding: 12px 15px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        width: 175px;
+        height: 45px;
+        margin-left: 27.5%;
+        font-size: 18px;
+        font-weight: bold;;
+        font-family: 'Inter', sans-serif;
+    }
+    .btn-primary:hover {
+            background: #FFC700;
+            color: #1A1A1A;
+    }
+    .auth-footer {
+        margin-top: 20px;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .auth-footer a {
+            color: #FFC700;
+            text-decoration: none;
+            font-weight: bold;
+    }
+
+    .auth-footer a:hover {
+            text-decoration: underline;
+    }
+
+    </style>
 </head>
 <body class="auth-body">
     <div class="auth-card">
