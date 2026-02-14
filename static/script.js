@@ -57,6 +57,84 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+let originalTitle = "";
+let originalContent = "";
+
+function enterEditMode() {
+    const titleEl = document.getElementById('titleText');
+    const contentEl = document.getElementById('contentText');
+
+    originalTitle = titleEl.innerText;
+    originalContent = contentEl.innerText;
+
+    titleEl.innerHTML = `<input type="text" id="edit-title-input" class="modal-input" value="${originalTitle}">`;
+    contentEl.innerHTML = `<textarea id="edit-content-input" class="modal-textarea">${originalContent}</textarea>`;
+
+    document.getElementById('rewrite-btn').style.display = 'none';
+    document.getElementById('delete-btn-modal').style.display = 'none';
+    document.getElementById('save-btn').style.display = 'inline-block';
+    document.getElementById('cancel-btn').style.display = 'inline-block';
+}
+
+function exitEditMode(save = false) {
+    const titleEl = document.getElementById('titleText');
+    const contentEl = document.getElementById('contentText');
+
+    if (!save) {
+        titleEl.innerText = originalTitle;
+        contentEl.innerText = originalContent;
+    } else {
+        titleEl.innerText = document.getElementById('edit-title-input').value;
+        contentEl.innerText = document.getElementById('edit-content-input').value;
+    }
+    document.getElementById('rewrite-btn').style.display = 'inline-block';
+    document.getElementById('delete-btn-modal').style.display = 'inline-block';
+    document.getElementById('save-btn').style.display = 'none';
+    document.getElementById('cancel-btn').style.display = 'none';
+}
+
+function saveChanges() {
+    const newTitle = document.getElementById('edit-title-input').value;
+    const newContent = document.getElementById('edit-content-input').value;
+
+    socket.emit('update_note', {
+        id: noteIdToDelete,
+        title: newTitle,
+
+});
+    exitEditMode(true);
+}
+
+let currentOpenNoteId = null;
+
+function openFullNote(id, title, content, timestamp) {
+    currentOpenNoteId = id;
+
+    document.getElementById('view-title').innerText = title;
+    document.getElementById('view-content').innerText = content;
+    document.getElementById('view-time-display').innerText = "Update: " + timestamp;
+
+    document.getElementById('view-title').style.display = 'block';
+    document.getElementById('view-content-body').style.display = 'block';
+
+    const titleInput = document.getElementById('edit-title-input');
+    const contentInput = document.getElementById('edit-content-textarea');
+    if(titleInput) titleInput.style.display = 'none';
+    if(contentInput) contentInput.style.display = 'none';
+
+    document.getElementById('rewrite-btn').style.display = 'inline-block';
+    document.getElementById('delete-btn-modal').style.display = 'inline-block';
+    document.getElementById('save-btn').style.display = 'none';
+    document.getElementById('cancel-btn').style.display = 'none';
+
+    document.getElementById('viewNoteModal').style.display = 'flex';
+}
+
+function closeViewModal() {
+    document.getElementById('viewNoteModal').style.display = 'none';
+    currentOpenNoteId = null;
+}
+
 socket.on('note_added', function(data) {
     let container = document.querySelector('.note-holder');
     const emptyState = document.querySelector('.stack-wrapper');
@@ -69,7 +147,7 @@ socket.on('note_added', function(data) {
     }
 
     const newNoteHtml = `
-        <div id="note-${data.id}" class="notes">
+        <div id="note-${data.id}" class="notes" onclick="openFullNote(${data.id}, '${data.title}', '${data.content}', '${data.timestamp}')">
             <div class="note-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 25px;">
                 <h3>${data.title}</h3>
                 <div class="note-action">
@@ -107,5 +185,20 @@ socket.on('note_deleted', function(data) {
                     <p id="create">Click "New Note" to create your first note</p>
                 </div>
             </div>`;
+    }
+});
+
+socket.on('note_updated', function(data) {
+    const noteCard = document.getElementById(`note-${data.id}`);
+
+    if (noteCard) {
+        noteCard.querySelector('.Note-Content').innerText = data.content;
+        noteCard.querySelector('.Time').innerText = `Updated: ${data.timestamp}`;
+        noteCard.querySelector('h3').innerText = data.title;
+    }
+
+    const modalTime = document.getElementById('modal-time');
+    if (modalTime) {
+        modalTime.innerText = "Updated: " + data.timestamp;
     }
 });

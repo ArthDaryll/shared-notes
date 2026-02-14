@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_login import login_user, LoginManager, UserMixin, login_required, current_user
 
 
@@ -24,10 +24,9 @@ class User(db.Model, UserMixin):
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(500), nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
-    #notes = db.relationship('Note', backref='author', lazy=True)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -105,3 +104,20 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all() # Ensures tables are created
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+
+@socketio.on('update_note')
+def handle_update_note(data):
+    note = Note.query.get(data['id'])
+
+    if note and note.user_id == current_user.id:
+        note.title = data['title']
+        note.content = data['content']
+        note.timestamp = datetime.now(timezone.utc)
+        db.session.commit()
+
+        emit('note_updated', {
+            'id': note.id,
+            'title': note.title,
+            'content': note.content,
+            'timestamp': note.timestamp.strftime('%d-%m-%Y, %I:%M:%p')
+        }, broadcast=True)
