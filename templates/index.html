@@ -47,33 +47,35 @@
 {% else %}
     <div class="note-holder">
     {% for note in notes %}
-        <div id="note-{{ note.id }}" class="notes">
-            <h3>{{ note.title }}</h3>
+        <div id="note-{{ note.id }}" class="notes" onclick="openFullNote({{ note.id }})">
+            <h3 class="note-title-source">{{ note.title }}</h3>
             <hr>
             <div class="note-action">
-                <button class="delete" onclick="deleteNote({{ note.id }})"><img src="{{ url_for('static', filename='png/delete.png') }}"></button>
+                <button class="delete" onclick="event.stopPropagation(); deleteNote({{ note.id }})">
+                    <img src="{{ url_for('static', filename='png/delete.png') }}">
+                </button>
             </div>
-            <p class="Note-Content">{{ note.content }}</p>
-            <span class="Time">Updated: {{ note.timestamp.strftime('%d/%m/%Y, %I:%M %p') }}</span>
+            <p class="Note-Content note-body-source">{{ note.content }}</p>
+            <span class="Time note-time-source">Updated: {{ note.timestamp.strftime('%d/%m/%Y, %I:%M %p') }}</span>
         </div>
     {% endfor %}
     </div>
 {% endif %}
 <div class="big-holder">
     <div class="TitleButton">
-    <h2>Title of the Note</h2>
+    <h2 id="titleText"></h2>
     <div class="bigButton" id="bigButton">
-    <button class="ballPoint" ><img src="{{ url_for('static', filename='png/Ball Point Pen.png') }}"></button>
-    <button class="ballPoint"><img src="{{ url_for('static', filename='png/delete.png') }}"></button>
-    <button class ="ballPoint" id="closeButton"><img src="{{ url_for('static', filename='png/Multiply.png') }}""></button>
+    <button class="ballPoint" id="rewrite-btn"><img src="{{ url_for('static', filename='png/Ball Point Pen.png') }}"></button>
+    <button class="ballPoint" id="delete-btn-modal"><img src="{{ url_for('static', filename='png/delete.png') }}"></button>
+    <button class ="ballPoint" id="closeButton"><img src="{{ url_for('static', filename='png/Multiply.png') }}"></button>
     </div>
     </div>
-    <hr>
-    <p id="contents">The content of the title</p>
-    <p id="upToDate">Updated: 12/06/2026, 12:01 PM</p>
+    <hr id="line">
+    <p id="contentText"></p>
+    <span id="upToDate"></span>
     <div class="savendCancel">
-    <button id="cancelContent">Cancel</button>
-    <button id="saveContent">Save</button>
+    <button id="cancel-btn">Cancel</button>
+    <button id="save-btn">Save</button>
     </div>
 </div>
 <div id="deleteModal" class="modal-overlay" style="display: none;">

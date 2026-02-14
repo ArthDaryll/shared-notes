@@ -13,6 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmBtn = document.getElementById('confirmDelete');
     const cancelBtn = document.getElementById('cancelDelete');
 
+    document.getElementById('rewrite-btn').onclick = enterEditMode;
+    document.getElementById('cancel-btn').onclick = () => { 
+        exitEditMode();
+    }
+    document.getElementById('save-btn').onclick = saveChanges;
+
+    document.getElementById('closeButton').onclick = () => {
+        document.querySelector('.big-holder').style.display = 'none';
+        currentOpenNoteId = null;
+    };
+
+    document.getElementById('delete-btn-modal').onclick = () => {
+        if (currentOpenNoteId) {
+            deleteNote(currentOpenNoteId);
+        }
+    };
+
     // 2. Handle Cancel
     cancelBtn.addEventListener('click', () => {
         deleteModal.style.display = 'none';
@@ -24,7 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (noteIdToDelete) {
             socket.emit('delete_note', { id: noteIdToDelete });
             deleteModal.style.display = 'none';
+
+            document.querySelector('.big-holder').style.display = 'none';
+
             noteIdToDelete = null;
+            currentOpenNoteId = null;
         }
     });
 });
@@ -68,12 +89,13 @@ function enterEditMode() {
     originalContent = contentEl.innerText;
 
     titleEl.innerHTML = `<input type="text" id="edit-title-input" class="modal-input" value="${originalTitle}">`;
-    contentEl.innerHTML = `<textarea id="edit-content-input" class="modal-textarea">${originalContent}</textarea>`;
+    contentEl.innerHTML = `<textarea id="edit-content-textarea" class="modal-textarea">${originalContent}</textarea>`;
 
     document.getElementById('rewrite-btn').style.display = 'none';
     document.getElementById('delete-btn-modal').style.display = 'none';
     document.getElementById('save-btn').style.display = 'inline-block';
     document.getElementById('cancel-btn').style.display = 'inline-block';
+    document.getElementById('line').style.display = 'none';
 }
 
 function exitEditMode(save = false) {
@@ -85,8 +107,12 @@ function exitEditMode(save = false) {
         contentEl.innerText = originalContent;
     } else {
         titleEl.innerText = document.getElementById('edit-title-input').value;
-        contentEl.innerText = document.getElementById('edit-content-input').value;
+        contentEl.innerText = document.getElementById('edit-content-textarea').value;
     }
+
+    const line = document.getElementById('line');
+    if (line) line.style.display = 'block';
+
     document.getElementById('rewrite-btn').style.display = 'inline-block';
     document.getElementById('delete-btn-modal').style.display = 'inline-block';
     document.getElementById('save-btn').style.display = 'none';
@@ -94,45 +120,48 @@ function exitEditMode(save = false) {
 }
 
 function saveChanges() {
-    const newTitle = document.getElementById('edit-title-input').value;
-    const newContent = document.getElementById('edit-content-input').value;
+    const titleInput = document.getElementById('edit-title-input');
+    const contentInput = document.getElementById('edit-content-textarea');
 
-    socket.emit('update_note', {
-        id: noteIdToDelete,
-        title: newTitle,
+    if (titleInput && contentInput) {
+        const newTitle = titleInput.value;
+        const newContent = contentInput.value;
 
-});
-    exitEditMode(true);
+        socket.emit('update_note', {
+            id: currentOpenNoteId,
+            title: newTitle,
+            content: newContent
+        });
+        exitEditMode(true);
+    }
 }
 
 let currentOpenNoteId = null;
 
-function openFullNote(id, title, content, timestamp) {
+function openFullNote(id) {
     currentOpenNoteId = id;
+    const noteCard = document.getElementById(`note-${id}`);
 
-    document.getElementById('view-title').innerText = title;
-    document.getElementById('view-content').innerText = content;
-    document.getElementById('view-time-display').innerText = "Update: " + timestamp;
+    const title = noteCard.querySelector('.note-title-source').innerText;
+    const content = noteCard.querySelector('.note-body-source').innerText;
+    const time = noteCard.querySelector('.note-time-source').innerText;
 
-    document.getElementById('view-title').style.display = 'block';
-    document.getElementById('view-content-body').style.display = 'block';
+    originalTitle = title;
+    originalContent = content;
 
-    const titleInput = document.getElementById('edit-title-input');
-    const contentInput = document.getElementById('edit-content-textarea');
-    if(titleInput) titleInput.style.display = 'none';
-    if(contentInput) contentInput.style.display = 'none';
+    document.getElementById('titleText').innerText = title;
+    document.getElementById('contentText').innerText = content;
+    document.getElementById('upToDate').innerText = time;
 
+    document.querySelector('.big-holder').style.display = 'block';
+    
+    // 5. Ensure buttons are reset to view mode
     document.getElementById('rewrite-btn').style.display = 'inline-block';
     document.getElementById('delete-btn-modal').style.display = 'inline-block';
     document.getElementById('save-btn').style.display = 'none';
     document.getElementById('cancel-btn').style.display = 'none';
-
-    document.getElementById('viewNoteModal').style.display = 'flex';
-}
-
-function closeViewModal() {
-    document.getElementById('viewNoteModal').style.display = 'none';
-    currentOpenNoteId = null;
+    
+    exitEditMode();
 }
 
 socket.on('note_added', function(data) {
@@ -147,26 +176,18 @@ socket.on('note_added', function(data) {
     }
 
     const newNoteHtml = `
-        <div id="note-${data.id}" class="notes" onclick="openFullNote(${data.id}, '${data.title}', '${data.content}', '${data.timestamp}')">
-            <div class="note-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 25px;">
-                <h3>${data.title}</h3>
+        <div id="note-${data.id}" class="notes" onclick="openFullNote(${data.id})">
+                <h3 class="note-title-source">${data.title}</h3>
                 <div class="note-action">
-                    <button class="rewrite"><img src="/static/png/Ball Point Pen.png"></button>
                     <button class="delete" onclick="deleteNote(${data.id})"><img src="/static/png/delete.png"></button>
                 </div>
-            </div>
             <hr>
-            <p class="Note-Content">${data.content}</p>
-            <span class="Time" style="margin-top: auto; padding: 20px;">Updated: ${data.timestamp}</span>
+            <p class="Note-Content note-body-source">${data.content}</p>
+            <span class="Time note-time-source" style="margin-top: auto; padding: 20px;">Updated: ${data.timestamp}</span>
         </div>`;
     
     // Insert the note into the now-existing container
-    if (container) {
-        container.insertAdjacentHTML('afterbegin', newNoteHtml);
-    } else {
-        // Fallback: if structure is missing, refresh to let Jinja rebuild it
-        location.reload();
-    }
+    container.insertAdjacentHTML('beforeend', newNoteHtml);
 });
 
 socket.on('note_deleted', function(data) {
@@ -192,13 +213,14 @@ socket.on('note_updated', function(data) {
     const noteCard = document.getElementById(`note-${data.id}`);
 
     if (noteCard) {
-        noteCard.querySelector('.Note-Content').innerText = data.content;
-        noteCard.querySelector('.Time').innerText = `Updated: ${data.timestamp}`;
-        noteCard.querySelector('h3').innerText = data.title;
+        noteCard.querySelector('.note-body-source').innerText = data.content;
+        noteCard.querySelector('.note-time-source').innerText = `Updated: ${data.timestamp}`;
+        noteCard.querySelector('.note-title-source').innerText = data.title;
     }
 
-    const modalTime = document.getElementById('modal-time');
+    const modalTime = document.getElementById('upToDate');
     if (modalTime) {
         modalTime.innerText = "Updated: " + data.timestamp;
     }
+    exitEditMode(true);
 });
