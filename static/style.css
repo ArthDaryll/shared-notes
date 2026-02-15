@@ -587,3 +587,131 @@ p#cnn{
         color: #FFC700;
         font-family: 'Inter', sans-serif
     }
+    .group-header h3{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 48px;
+    color: #FFC700;
+    padding: 10px;
+    }
+    .groups-list{
+        list-style: none;
+        padding: 0;
+    }
+    .groups-list li{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 29px;
+        display: flex;       /* This turns the list item into a horizontal row */
+        align-items: center; /* This perfectly centers the text vertically with the image */
+        gap: 12px;           /* This creates a clean space between the image and the text */
+        padding: 8px 10px;
+        cursor: pointer;
+    }
+    :root {
+  --sidebar-width: 380px;
+    }
+    .sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-left: none;
+    border-radius: 5px;
+    z-index: 1000;
+    transform: translateX(-100%); 
+    transition: transform 0.3s ease-in-out;
+    }
+    .sidebar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -20px; /* This extends 20px into the screen to catch your mouse */
+    width: 20px;
+    height: 100%;
+    background: transparent; /* It's invisible but still clickable/hoverable */
+}
+    .sidebar:hover {
+    transform: translateX(0);
+}
+    .create-join{
+        position: absolute;
+        bottom: 20px;   /* Distance from the bottom edge */
+        left: 10px ;  /* Aligns with your text padding */
+        display: flex;
+        flex-direction: column; /* Stacks the two buttons vertically */
+        gap: 10px;
+    }
+    .create-join button{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 29px;
+        color: #FFC700;
+        display: flex;          /* This aligns the img and text horizontally */
+        align-items: center;    /* Centers the icon vertically with the text */
+        gap: 10px;
+        cursor: pointer;
+    }
+    #bottom-hr{
+    position: absolute;
+    bottom: 100px; /* Adjust this number based on how tall your buttons are */
+    left: 0;
+    right: 0;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.5); /* Matching your 50% opacity */
+}
+.createGroup{
+    
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    width: 380px;
+    height: 350px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.createGroup input{
+    margin: 20px;
+    width: 90%;
+    height: 20px;
+    padding: 1em;
+    background: transparent;
+}
+.createGroup hr{
+     border: 0;
+    border-top: 1px solid #FFC700;
+    width: 90%;
+    margin: 5px auto;
+}
+.createGroup button{
+    position: relative;
+    width: 150px;
+    height: 45px;
+    background: #1A1A1A;
+    border: 1px solid #FFC700;
+    border-radius: 10px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #FFC700;
+}
+#SaveCreate:hover, #CancelCreate:hover{
+    background-color: #ffc700;
+    color: #000000;
+}
+

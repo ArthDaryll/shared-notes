@@ -88,6 +88,26 @@
         </div>
     </div>
 </div>
-
+<div class="sidebar">
+    <div class="group-header">
+        <h3>Groups</h3>
+    </div>
+    <hr style="opacity: 50%">
+    <ul class="groups-list">
+        <li><img src="{{ url_for('static', filename='png/User Male.png') }}">My Personal Notes</li>
+        <li> <img src="{{ url_for('static', filename='png/User Groups.png') }}">Group Notes</li>
+    </ul>
+     <hr id="bottom-hr">
+    <div class="create-join"> 
+        <button type="button"><img src="{{ url_for('static', filename='png/Yellow Male.png') }}">Create New Group</button>
+        <button type="button"><img src="{{ url_for('static', filename='png/Yellow Male.png') }}">Search / Join Group</button>
+    </div>
+</div>
+<div class="createGroup">
+    <input>
+    <hr>
+    <button type="button" id="CancelCreate">Cancel</button>
+    <button type="submit" id="SaveCreate">Save</button>
+</div>
 </body>
 </html>
