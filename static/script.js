@@ -30,13 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // 2. Handle Cancel
     cancelBtn.addEventListener('click', () => {
         deleteModal.style.display = 'none';
         noteIdToDelete = null;
     });
 
-    // 3. Handle Confirm
     confirmBtn.addEventListener('click', () => {
         if (noteIdToDelete) {
             socket.emit('delete_note', { id: noteIdToDelete });
@@ -223,4 +221,44 @@ socket.on('note_updated', function(data) {
         modalTime.innerText = "Updated: " + data.timestamp;
     }
     exitEditMode(true);
+});
+
+socket.on('load_notes', function(data) {
+    // 1. Find or reset the container
+    let container = document.querySelector('.note-holder');
+    const emptyState = document.querySelector('.stack-wrapper');
+
+    // 2. If there are no notes in the new group, show the empty state
+    if (data.notes.length === 0) {
+        const dashboard = document.querySelector('.dashboard-content'); // Or your main parent
+        dashboard.innerHTML = `
+            <div class="stack-wrapper">
+                <img src="/static/png/empty.png">
+                <p>No notes in this group yet.</p>
+            </div>`;
+        return;
+    }
+
+    // 3. If notes exist, ensure we have a note-holder and clear it
+    if (emptyState) {
+        emptyState.outerHTML = `<div class="note-holder"></div>`;
+        container = document.querySelector('.note-holder');
+    } else if (container) {
+        container.innerHTML = ''; // Wipe old notes from previous group
+    }
+
+    // 4. Loop through and add each note using your exact HTML template
+    data.notes.forEach(note => {
+        const noteHtml = `
+            <div id="note-${note.id}" class="notes" onclick="openFullNote(${note.id})">
+                    <h3 class="note-title-source">${note.title}</h3>
+                    <div class="note-action">
+                        <button class="delete" onclick="deleteNote(${note.id})"><img src="/static/png/delete.png"></button>
+                    </div>
+                <hr>
+                <p class="Note-Content note-body-source">${note.content}</p>
+                <span class="Time note-time-source" style="margin-top: auto; padding: 20px;">Updated: ${note.timestamp}</span>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', noteHtml);
+    });
 });
